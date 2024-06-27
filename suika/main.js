@@ -5,7 +5,8 @@ var Engine = Matter.Engine,
     Runner = Matter.Runner,
     Bodies = Matter.Bodies,
     World = Matter.World,
-    Body = Matter.Body;
+    Body = Matter.Body,
+    Events = Matter.Events;
 
 // 엔진 선언
 const engine = Engine.create();
@@ -117,5 +118,36 @@ window.onkeydown = (event) => {
             break;    
     }
 }
+
+Events.on(engine, "collisionStart", (event) => {
+    // 콜리전 이벤트 발생시 생기는 모든 오브젝트를 비교
+    event.pairs.forEach((collision) => {
+        if (collision.bodyA.index == collision.bodyB.index) {
+
+            // 기존 과일의 index를 저장
+            const index = collision.bodyA. index;
+
+            // 충돌이 일어나는 같은 과일 제거
+            World.remove(world, [collision.bodyA, collision.bodyB]);
+
+            // 기존 과일에서 1 증가 시킨 값을 저장
+            const newFruit = FRUITS[index + 1];
+            const newBody = Bodies.circle(
+                // 부딪힌 위치의 x,y 값
+                collision.collision.supports[0].x,
+                collision.collision.supports[0].y,
+                newFruit.radius,
+                {
+                    // 과일 index 저장
+                    index : index + 1,
+                    // 새로운 과일 렌더링
+                    render : { sprite : { texture : `${newFruit.name}.png` }},
+                }
+            );
+
+                World.add(world, newBody);
+        }
+    });
+})
 
 addFruit();
