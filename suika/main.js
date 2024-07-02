@@ -104,7 +104,7 @@ window.onkeydown = (event) => {
             })
             break;
         case "KeyD":
-            if (currentBody.position.x + currentFruit.radius > 590)
+            if (currentBody.position.x + currentFruit.radius < 590)
             Body.setPosition(currentBody, {
                 x: currentBody.position.x + 10,
                 y: currentBody.position.y
